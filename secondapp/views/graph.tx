@@ -1,0 +1,108 @@
+: cascade base
+: around content -> {
+
+
+<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        
+        // グラフの設定
+        var chartOptions = {
+            chart: {
+                renderTo: 'graph',// 表示する要素のIDを指定
+                type: 'line',// 表示するグラフのタイプを指定
+                marginRight: 130,
+                marginBottom: 25
+            },
+            // グラフのタイトル
+            title: {
+                text: 'busy グラフ',
+                x: -20 //center
+            },
+            // サブタイトル
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            // 横軸の設定
+            xAxis: {
+                categories: [
+		      : for $week -> $w{
+		      	'<:$w :>' , 
+	        	: }   
+			]
+            },
+            // 縦軸の設定
+            yAxis: {
+                title: {
+                    text: 'busy point'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            // グラフの上にカーソルをあわせた時に表示するtooptipの内容を設定
+            tooltip: {
+                formatter: function() {
+			if (this.y < 20) return 'もっと働きなさい';
+			if (this.y < 30) return 'ちょうどよい程度です';
+			if (this.y < 50) return '計画的にやりましょう';
+			if (this.y < 70) return 'TODOが過剰です';
+			if (this.y < 90) return 'やるきあんの？';
+			return '死の宣告';
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: true
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+                // データ
+            series: [{
+	    	type: 'area',
+                name: 'busy point',
+                data: [
+		      : for $busy_point -> $point{
+		      	<:$point :> , 
+	        	: }   
+		      ]
+		            }
+            ]
+        };
+        // グラフを描画
+        chart = new Highcharts.Chart(chartOptions);
+    });
+});
+
+</script>
+:}
+
+

@@ -1,0 +1,27 @@
+: cascade base
+: around content -> {
+  <h2>編集</h2>	 
+  : while (my $row = $update_data.fetch_hash){
+    <form method="POST" id="update_form" name="update_form" action="<: $c.req.uri_for('/update') :>">
+    <input type="hidden" name="update_id" value="<: $row.id :>" />
+    title:
+    <textarea name="title" rows="1"><: $row.title :></textarea>
+    <br />
+    memo:
+    <textarea name="memo" rows="5"><: $row.memo :></textarea>
+    <br />
+    priority:
+    <textarea name="priority" rows="1"><: $row.priority :></textarea>
+    <br />
+    status:
+    <textarea name="status" rows="1"><: $row.status :></textarea>
+    <br />
+    deadline:
+    <textarea name="deadline" rows="1"><: $row.deadline :></textarea>
+    <br />
+    <input type="submit" value="実行" />
+    </form>
+  :}
+:}
+
+

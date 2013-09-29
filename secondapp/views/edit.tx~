@@ -1,0 +1,27 @@
+: cascade base
+: around content -> {
+  <h1><: $greeting :> <: $c.stash.site_name :></h1>
+  <h2>memo</h2>
+  : while (my $row = $content.fetch_hash){
+    	<ul><: $row.title :> <: $row[1] :> <: $row.memo :></ul>
+	<form method="POST" id="update_form" name="update_form" action="<: $c.req.uri_for('/edit') :>">
+	      <input type="submit" value="編集" />
+	      <input type="hidden" name="update_id" value="<: $row.id :>" />
+      	</form>
+	<form method="POST" id="delete_form" name="delete_form" action="<: $c.req.uri_for('/delete') :>">
+	      <input type="submit" value="削除" />
+	      <input type="hidden" name="delete_id" value="<: $row.id :>" />
+      	</form>
+  : }
+  <ht2>投稿</ht2>
+  <form method="POST" id="write_form" name="write_form" action="<: $c.req.uri_for('/write') :>">
+  <textarea name="title" rows="1"></textarea>
+  <textarea name="memo" rows="5"></textarea>
+  <textarea name="priority" rows="1"></textarea>
+  <textarea name="status" rows="1"></textarea>
+  <textarea name="deadline" rows="1"></textarea>
+  <input type="submit" value="実行" />
+  </form>
+:}
+
+
