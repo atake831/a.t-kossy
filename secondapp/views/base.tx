@@ -2,9 +2,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
-<title>secondapp</title>
+<title>TODO リスト</title>
 <link rel="shortcut icon" href="<: $c.req.uri_for('/favicon.ico') :>" type="image/vnd.microsoft.icon" />
 <link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap.min.css') :>">
+<link rel="stylesheet" href="<: $c.req.uri_for('/css/tablecloth.css') :>">
+<link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap-tables.css') :>">
 <style>
 body {
   padding-top: 60px;
@@ -22,11 +24,10 @@ body {
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 </a>
-<a class="brand" href="<: $c.req.uri_for('/') :>">secondapp</a>
+<a class="brand" href="<: $c.req.uri_for('/') :>">TODO リスト</a>
 <div class="nav-collapse">
 <ul class="nav">
-<li class="active"><a href="<: $c.req.uri_for('/') :>">Home</a></li>
-<li><a href="/db">Db</a></li>
+<li><a href="<: $c.req.uri_for('/') :>">Home</a></li>
 <li><a href="/graph">Graph</a></li>
 </ul>
 </div> <!--/.nav-collapse -->
@@ -38,12 +39,17 @@ body {
 <script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
 <!--<script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.min.js') :>"></script>-->
 <script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.js') :>"></script>
+<script type="text/javascript" src="<: $c.req.uri_for('/js/highcharts.js') :>"></script>
+<script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.tablesorter.min.js') :>"></script>
+<script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.tablecloth.js') :>"></script>
 
 
 <div class="container">
 
+<div id="graph" style=”width: 50%; height: 400px”></div>
+<div id="list" style=”width: 50%; height: 400px”>
 : block content -> { }
-
+</div>
 </div> <!-- /container -->
 
 <script type="text/javascript">
@@ -58,7 +64,8 @@ data: $(write_form).serialize(),
 dataType: "json"
 });
 });
-</script>"
+})
+</script>
 </body>
 </html>
 

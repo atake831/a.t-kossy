@@ -23,25 +23,7 @@ filter 'set_title' => sub {
     }
 };
 
-get '/' => [qw/set_title/] => sub {
-    my ( $self, $c )  = @_;
-    $c->render('index.tx', { greeting => "Hello" });
-};
-
-get '/json' => sub {
-    my ( $self, $c )  = @_;
-    my $result = $c->req->validator([
-        'q' => {
-            default => 'Hello',
-            rule => [
-                [['CHOICE',qw/Hello Bye/],'Hello or Bye']
-            ],
-        }
-    ]);
-    $c->render_json({ greeting => $result->valid->get('q') });
-};
-
-get '/db' => sub{
+get '/' => sub{
     my ( $self, $c ) = @_;
     my $dbi = get_dbi();
     my $content = $dbi->select(table => 'content');
@@ -84,7 +66,7 @@ post '/write' => sub {
     'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
 				]);
     $self->write(map {$result->valid($_)} qw/title memo priority status deadline/);
-    $c->redirect($c->req->uri_for("/db"));
+    $c->redirect($c->req->uri_for("/"));
 };
 
 sub delete{
@@ -104,7 +86,7 @@ post '/delete' => sub{
 	'delete_id' => { rule => [ ['NOT_NULL', 'empty delete_id'],],},
 				    ]);
     $self->delete(map {$result->valid($_)} qw/delete_id/);
-    $c->redirect($c->req->uri_for("/db"));
+    $c->redirect($c->req->uri_for("/"));
 };
 
 get '/edit' => sub{
@@ -160,9 +142,8 @@ post '/update' => sub {
     'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
 				]);
     $self->update(map {$result->valid($_)} qw/update_id title memo priority status deadline/);
-    $c->redirect($c->req->uri_for("/db"));
+    $c->redirect($c->req->uri_for("/"));
 };
-
 
 get '/graph' => sub{
     my ( $self, $c ) = @_;
