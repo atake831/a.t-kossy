@@ -27,12 +27,18 @@ body {
 <ul class="nav">
 <li class="active"><a href="<: $c.req.uri_for('/') :>">Home</a></li>
 <li><a href="/db">Db</a></li>
-<li><a href="#contact">Contact</a></li>
+<li><a href="/graph">Graph</a></li>
 </ul>
 </div> <!--/.nav-collapse -->
 </div>
 </div>
 </div>
+
+<script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.min.js') :>"></script>
+<script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
+<!--<script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.min.js') :>"></script>-->
+<script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.js') :>"></script>
+
 
 <div class="container">
 
@@ -40,8 +46,6 @@ body {
 
 </div> <!-- /container -->
 
-<script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.min.js') :>"></script>
-<script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
 <script type="text/javascript">
 $(function(){
 
