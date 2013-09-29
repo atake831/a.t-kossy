@@ -6,6 +6,7 @@ use utf8;
 use Kossy;
 
 use DBI;
+use DBIx::Custom;
 
 filter 'set_title' => sub {
     my $app = shift;
@@ -36,46 +37,54 @@ get '/json' => sub {
 
 get '/db' => sub{
     my ( $self, $c ) = @_;
-    my $dbh = DBI->connect("DBI:mysql:kossydb", "kossyuser", "kossypass");
-    my $user = $dbh->prepare("select * from user");
-    my $says = $dbh->prepare("select name,say from says inner join user on user.id = says.id_user");
-    $user->execute;
-    $says->execute;
+    my $dbi = DBIx::Custom->connect(
+	dsn => "dbi:mysql:database=kossy",
+	user => "kossyuser", 
+	password => "kossypass",
+	option => {mysql_enable_utf8 => 1});
+    my $content = $dbi->select(table => 'content');
     $c->render('db.tx', { 
 	greeting => "Hello", 
-	user => $user->fetchall_arrayref ,
-	says => $says->fetchall_arrayref ,
+	content => $content ,
 	       }
 	);
 };
 
 sub write{
     my $self = shift;
-    my ( $body, $user_id ) = @_;
-    $body = "" if ! defined $body;
-    $user_id = "" if ! defined $user_id;
-    if (length($body) < 255){ 
-	my $dbh = DBI->connect("DBI:mysql:kossydb", "kossyuser", "kossypass");
-	my $insert_say = $dbh->prepare("insert into says values(" . $user_id . ",'" . $body . "')");
-	$insert_say->execute;
-	$insert_say->finish();
-	$dbh->disconnect();
+    my ( $title, $memo, $priority, $status, $deadline ) = @_;
+    $title = "" if ! defined $title;
+    $memo = "" if ! defined $memo;
+    $priority = "" if ! defined $priority;
+    $status = "" if ! defined $status;
+    $deadline = "" if ! defined $deadline;
+
+    if (length($memo) < 255){ 
+	my $dbi = DBIx::Custom->connect(
+	    dsn => "dbi:mysql:database=kossy",
+	    user => "kossyuser", 
+	    password => "kossypass",
+	    option => {mysql_enable_utf8 => 1});
+	my $insert_todo = $dbi->insert({
+	    title => $title,
+	    memo => $memo,
+	    priority => $priority,
+	    status => $status,
+	    deadline => $deadline,
+				       }, table => 'content');
     }
 };
-
 
 post '/write' => sub {
     my ( $self, $c ) = @_;
     my $result = $c->req->validator([
-    'body' => {
-	rule => [ ['NOT_NULL','empty body'],],
-    },
-    'user' => {
-	rule => [ ['NOT_NULL','empty user'],],
-    }
+    'title' => {	rule => [ ['NOT_NULL','empty title'],],},
+    'memo' => {	rule => [ ['NOT_NULL','empty memo'],],},
+    'priority' => {	rule => [ ['NOT_NULL','empty priority'],],},
+    'status' => {	rule => [ ['NOT_NULL','empty status'],],},
+    'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
 				]);
-    $self->write(map {$result->valid($_)} qw/body user/);
-    #$c->render_json({ body=>$self->write(map {$result->valid($_)} qw/body user/),error => 0, location => $c->req->uri_for("/db")->as_string});
+    $self->write(map {$result->valid($_)} qw/title memo priority status deadline/);
     $c->redirect($c->req->uri_for("/db"));
 };
 

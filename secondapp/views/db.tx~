@@ -1,6 +1,19 @@
 : cascade base
 : around content -> {
-<h1><: $greeting :> <: $c.stash.site_name :></h1>
-<p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
-: }
+  <h1><: $greeting :> <: $c.stash.site_name :></h1>
+  <h2>memo</h2>
+  : for $content -> $row {
+    	<ul><: $row[0] :>  <: $row[1] :> : $row[2] :></ul>
+  : }
+  <ht2>投稿</ht2>
+  <form method="POST" id="write_form" name="write_form" action="<: $c.req.uri_for('/write') :>">
+  <textarea name="title" rows="1"></textarea>
+  <textarea name="memo" rows="5"></textarea>
+  <textarea name="priority" rows="1"></textarea>
+  <textarea name="status" rows="1"></textarea>
+  <textarea name="deadline" rows="1"></textarea>
+  <input type="submit" value="実行" />
+  </form>
+:}
+
 

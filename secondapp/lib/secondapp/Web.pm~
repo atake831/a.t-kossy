@@ -5,6 +5,8 @@ use warnings;
 use utf8;
 use Kossy;
 
+use DBI;
+
 filter 'set_title' => sub {
     my $app = shift;
     sub {
@@ -30,6 +32,53 @@ get '/json' => sub {
         }
     ]);
     $c->render_json({ greeting => $result->valid->get('q') });
+};
+
+get '/db' => sub{
+    my ( $self, $c ) = @_;
+    my $dbh = DBI->connect("DBI:mysql:kossy", "kossyuser", "kossypass");
+    my $content = $dbh->prepare("select * from content");
+    $content->execute;
+    $c->render('db.tx', { 
+	greeting => "Hello", 
+	content => $content->fetchall_arrayref ,
+	       }
+	);
+};
+
+sub write{
+    my $self = shift;
+    my ( $title,$memo, $priority, $status, $deadline ) = @_;
+    $title = "" if ! defined $title;
+    $memo = "" if ! defined $memo;
+    $priority = "" if ! defined $priority;
+    $status = "" if ! defined $status;
+    $deadline = "" if ! defined $deadline;
+
+    if (length($memo) < 255){ 
+	my $dbh = DBI->connect("DBI:mysql:kossy", "kossyuser", "kossypass");
+	my $insert_todo = $dbh->prepare(
+	    "insert into content values(NULL,'" . 
+	    $title . "','" . $memo . "'," . 
+	    $priority . ",". $status .",'" . $deadline . "')");
+	$insert_todo->execute;
+	$insert_todo->finish();
+	$dbh->disconnect();
+    }
+};
+
+
+post '/write' => sub {
+    my ( $self, $c ) = @_;
+    my $result = $c->req->validator([
+    'title' => {	rule => [ ['NOT_NULL','empty title'],],},
+    'memo' => {	rule => [ ['NOT_NULL','empty memo'],],},
+    'priority' => {	rule => [ ['NOT_NULL','empty priority'],],},
+    'status' => {	rule => [ ['NOT_NULL','empty status'],],},
+    'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
+				]);
+    $self->write(map {$result->valid($_)} qw/title memo priority status deadline/);
+    $c->redirect($c->req->uri_for("/db"));
 };
 
 1;

@@ -42,6 +42,19 @@ body {
 
 <script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.min.js') :>"></script>
 <script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
+<script type="text/javascript">
+$(function(){
+
+$("#write_form").submit(function(){
+write_form = this;
+$.ajax({
+type: "POST",
+url: write_form.action,
+data: $(write_form).serialize(),
+dataType: "json"
+});
+});
+</script>"
 </body>
 </html>
 
