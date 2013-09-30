@@ -25,12 +25,27 @@ filter 'set_title' => sub {
 
 get '/' => sub{
     my ( $self, $c ) = @_;
+    my $result = $c->req->validator([
+	'search_str' => {rule => [ ['NOT_NULL','empty search_str'],],},]);
     my $dbi = get_dbi();
     my $content = $dbi->select(table => 'content');
     print Dumper "-----------";
+    my $search_str =  $result->valid->get('search_str');
+    if (!defined($search_str)){
+	$search_str = "";
+    }
+    my @rows;
+    my $cnt = 0 ;
+    while (my $row = $content->fetch_hash){
+	if(index($row->{title},$search_str) != -1 || index($row->{memo},$search_str) != -1){
+	    @rows[$cnt] = $row;
+	    $cnt++;
+	}
+    }
+    print Dumper $search_str;
     $c->render('db.tx', { 
-	greeting => "Hello", 
-	content => $content ,
+	search_str => $search_str,
+	content => \@rows ,
 	       }
 	);
 };
@@ -54,6 +69,23 @@ sub write{
 	    deadline => $deadline,
 				       }, table => 'content');
     }
+};
+
+get '/insert' => sub{
+    my ( $self, $c ) = @_;
+    my $result = $c->req->validator([
+	'insert_id' => {rule => [ ['NOT_NULL','empty insert_id'],],},]);
+    my $insert_id = $result->valid->get('insert_id');
+    my $dbi = get_dbi();
+    $dbi->order->prepend();
+    my $insert_data = $dbi->select(
+	where => {id => $insert_id}, 
+	table => 'content'
+	);
+    $c->render('insert.tx',{
+	    insert_data => $insert_data,
+	       }
+	);
 };
 
 post '/write' => sub {

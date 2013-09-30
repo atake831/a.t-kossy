@@ -4,26 +4,30 @@
   : while (my $row = $update_data.fetch_hash){
     <form method="POST" id="update_form" name="update_form" action="<: $c.req.uri_for('/update') :>">
     <input type="hidden" name="update_id" value="<: $row.id :>" />
-    title:
+    <label>title</label>
+    <div>
     <textarea name="title" rows="1"><: $row.title :></textarea>
-    <br />
-    memo:
+    </div>
+    <label>memo</label>
+    <div>
     <textarea name="memo" rows="5"><: $row.memo :></textarea>
-    <br />
-    priority:
+    </div>
+    <label>優先度</label>
+    <div>
     <select name="priority">
   	  <option value=3>高</option>
   	  <option value=2>中</option>
   	  <option value=1>低</option>
     </select>
-    <br />
-    status:
+    </div>
+    <label>状態</label>
+    <div>
     <select name="status">
   	  <option value=1>作業中</option>
   	  <option value=0>done</option>
     </select>
-    <br />
-    deadline: 
+    </div>
+    <label>締め切り</label> 
     <div id="datetimepicker1" class="input-append date">
     <input name="deadline" data-format="yyyy-MM-dd hh:mm:ss" type="text" value="<: $row.deadline :>"></input>
     <span class="add-on">

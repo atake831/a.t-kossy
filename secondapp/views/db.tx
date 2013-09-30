@@ -4,9 +4,24 @@
   <table id="todo-list">
 	<thead>
         <tr class="stathead">
-          <td align="center" colspan="6" class="{sorter: false}">
+          <td align="center" colspan="7" class="{sorter: false}">
 	      TODOリスト
 	  </td>
+        </tr>
+        <tr class="stathead">
+	<td align="center" class="{sorter: false}">
+  	<form method="GET" id="insert_form" name="insert_form" action="<: $c.req.uri_for('/insert') :>">
+	      <input class="btn btn-large btn-primary" type="submit" value="新規登録" />
+	      <input type="hidden" name="insert_id" value="<: $row.id :>" />
+      	</form>
+	</td>
+	<td colspan="5"></td>
+      	<td align="right" class="{sorter: false}">
+	<form method="GET" id="search_form" name="search_form" action="<: $c.req.uri_for('/') :>">
+	<textarea name="search_str" rows="1"></textarea>
+	 <input type="submit" value="検索" />
+	</form>
+	</td>
         </tr>
 	<tr class="colhead">
 	<th>title</th>
@@ -19,7 +34,7 @@
 	</tr>
 	</thead>
 	<tbody>
-  : while (my $row = $content.fetch_hash){
+	: for $content -> $row{	
     	<tr align="center">
 	<td> <: $row.title :> </td>
 	<td> <: $row.memo :></td>
@@ -36,9 +51,10 @@
 	      <input type="hidden" name="delete_id" value="<: $row.id :>" />
       	</form></td>
 	</tr>
-  : }
+   	: }
   </tbody>
   </table>
+<!--
   <ht2>投稿</ht2>
   <form method="POST" id="write_form" name="write_form" action="<: $c.req.uri_for('/write') :>">
   title:
@@ -78,7 +94,7 @@
   <br />
   <input type="submit" value="実行" />
   </form>
-
+-->
   <script>
   $(document).ready(function() {
       $("#todo-list").tablecloth({
