@@ -1,7 +1,7 @@
 
 : cascade base
 : around content -> {
-  <table>
+  <table id="todo-list">
 	<thead>
         <tr class="stathead">
           <td align="center" colspan="6" class="{sorter: false}">
@@ -48,20 +48,40 @@
   <textarea name="memo" rows="5"></textarea>
   <br />
   priority:
-  <textarea name="priority" rows="1"></textarea>
+  <select name="priority">
+  <option value=3>高</option>
+  <option value=2>中</option>
+  <option value=1>低</option>
+  </select>
   <br />
   status:
-  <textarea name="status" rows="1"></textarea>
+  <select name="status">
+  <option value=1>作業中</option>
+  <option value=0>done</option>
+  </select>
   <br />
   deadline:
-  <textarea name="deadline" rows="1"></textarea>
+    <div id="datetimepicker1" class="input-append date">
+    <input name="deadline" data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+    </div>
+  <script type="text/javascript">
+  	$(function() {
+    	  $('#datetimepicker1').datetimepicker({
+      	    language: 'en'
+    	  });
+  	});
+  </script>
   <br />
   <input type="submit" value="実行" />
   </form>
 
   <script>
   $(document).ready(function() {
-      $("table").tablecloth({
+      $("#todo-list").tablecloth({
         theme: "paper",  //　表の見た目
         striped: true, //背景を交互に付けて見やすくする
         sortable: true //ソート機能を使う

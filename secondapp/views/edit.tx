@@ -11,13 +11,34 @@
     <textarea name="memo" rows="5"><: $row.memo :></textarea>
     <br />
     priority:
-    <textarea name="priority" rows="1"><: $row.priority :></textarea>
+    <select name="priority">
+  	  <option value=3>高</option>
+  	  <option value=2>中</option>
+  	  <option value=1>低</option>
+    </select>
     <br />
     status:
-    <textarea name="status" rows="1"><: $row.status :></textarea>
+    <select name="status">
+  	  <option value=1>作業中</option>
+  	  <option value=0>done</option>
+    </select>
     <br />
-    deadline:
-    <textarea name="deadline" rows="1"><: $row.deadline :></textarea>
+    deadline: 
+    <div id="datetimepicker1" class="input-append date">
+    <input name="deadline" data-format="yyyy-MM-dd hh:mm:ss" type="text" value="<: $row.deadline :>"></input>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+    </div>
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+      language: 'en'
+    });
+  });
+</script>
+    <!--<textarea name="deadline" rows="1"><: $row.deadline :></textarea>-->
     <br />
     <input type="submit" value="実行" />
     </form>

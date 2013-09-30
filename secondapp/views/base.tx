@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap.min.css') :>">
 <link rel="stylesheet" href="<: $c.req.uri_for('/css/tablecloth.css') :>">
 <link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap-tables.css') :>">
+<link rel="stylesheet" href="<: $c.req.uri_for('/css/bootstrap-datetimepicker.min.css') :>">
 <style>
 body {
   padding-top: 60px;
@@ -37,11 +38,11 @@ body {
 
 <script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.min.js') :>"></script>
 <script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap.min.js') :>"></script>
-<!--<script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.min.js') :>"></script>-->
 <script type="text/javascript" src="<: $c.req.uri_for('/js/Chart.js') :>"></script>
 <script type="text/javascript" src="<: $c.req.uri_for('/js/highcharts.js') :>"></script>
 <script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.tablesorter.min.js') :>"></script>
 <script type="text/javascript" src="<: $c.req.uri_for('/js/jquery.tablecloth.js') :>"></script>
+<script type="text/javascript" src="<: $c.req.uri_for('/js/bootstrap-datetimepicker.min.js') :>"></script>
 
 
 <div class="container">

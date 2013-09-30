@@ -117,7 +117,8 @@ sub update{
     $status = "" if ! defined $status;
     $deadline = "" if ! defined $deadline;
 
-    if (length($memo) < 255){ 
+    if (length($memo) < 255){
+	print Dumper $deadline;
 	my $dbi = get_dbi();
 	my $update_todo = $dbi->update({
 	    title => $title,

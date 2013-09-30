@@ -11,7 +11,7 @@ $(function () {
         var chartOptions = {
             chart: {
                 renderTo: 'graph',// 表示する要素のIDを指定
-                type: 'line',// 表示するグラフのタイプを指定
+                type: 'area',// 表示するグラフのタイプを指定
                 marginRight: 130,
                 marginBottom: 25
             },
@@ -64,7 +64,7 @@ $(function () {
                 borderWidth: 0
             },
             plotOptions: {
-                area: {
+                areaspline: {
                     fillColor: {
                         linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
                         stops: [
@@ -74,7 +74,7 @@ $(function () {
                     },
                     lineWidth: 1,
                     marker: {
-                        enabled: true
+                        enabled: true,
                     },
                     shadow: false,
                     states: {
@@ -87,7 +87,7 @@ $(function () {
             },
                 // データ
             series: [{
-	    	type: 'area',
+	    	type: 'areaspline',
                 name: 'busy point',
                 data: [
 		      : for $busy_point -> $point{
