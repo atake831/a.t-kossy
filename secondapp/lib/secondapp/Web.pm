@@ -28,7 +28,7 @@ get '/' => sub{
     my $result = $c->req->validator([
 	'search_str' => {rule => [ ['NOT_NULL','empty search_str'],],},]);
     my $dbi = get_dbi();
-    my $content = $dbi->select(table => 'content');
+    my $content = $dbi->execute('Select * from content order by status desc');
     print Dumper "-----------";
     my $search_str =  $result->valid->get('search_str');
     if (!defined($search_str)){
@@ -38,10 +38,15 @@ get '/' => sub{
     my $cnt = 0 ;
     while (my $row = $content->fetch_hash){
 	if(index($row->{title},$search_str) != -1 || index($row->{memo},$search_str) != -1){
+	    my $deadline = Time::Piece->strptime(
+		$row->{deadline}, 
+		'%Y-%m-%d %H:%M:%S');
+	    my $sub_date = $deadline - localtime;
+	    $row->{'rest_date'} = int($sub_date->days);
 	    @rows[$cnt] = $row;
 	    $cnt++;
 	}
-    }
+   }
     print Dumper $search_str;
     $c->render('db.tx', { 
 	search_str => $search_str,
@@ -91,12 +96,18 @@ get '/insert' => sub{
 post '/write' => sub {
     my ( $self, $c ) = @_;
     my $result = $c->req->validator([
-    'title' => {	rule => [ ['NOT_NULL','empty title'],],},
-    'memo' => {	rule => [ ['NOT_NULL','empty memo'],],},
-    'priority' => {	rule => [ ['NOT_NULL','empty priority'],],},
-    'status' => {	rule => [ ['NOT_NULL','empty status'],],},
-    'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
+    'title' => {rule => [ ['NOT_NULL','empty title'],],},
+    'memo' => {rule => [ ['NOT_NULL','empty memo'],],},
+    'priority' => {rule => [ ['NOT_NULL','empty priority'],],},
+    'status' => {rule => [ ['NOT_NULL','empty status'],],},
+    'deadline' => {rule => [ ['NOT_NULL','empty deadline'],],},
 				]);
+    if($result->has_error){
+	return $c->render('insert.tx',{
+	    error_str => "入力に誤りがあります",
+		   }
+	    );
+    }
     $self->write(map {$result->valid($_)} qw/title memo priority status deadline/);
     $c->redirect($c->req->uri_for("/"));
 };
@@ -174,6 +185,19 @@ post '/update' => sub {
     'status' => {	rule => [ ['NOT_NULL','empty status'],],},
     'deadline' => {	rule => [ ['NOT_NULL','empty deadline'],],},
 				]);
+    if($result->has_error){
+	my $dbi = get_dbi();
+	$dbi->order->prepend();
+	my $update_data = $dbi->select(
+	    where => {id => $result->valid->get('update_id')}, 
+	    table => 'content'
+	    );
+	return $c->render('edit.tx',{
+	    update_data => $update_data,
+	    error_str => "入力に誤りがあります",
+		   }
+	    );
+    }
     $self->update(map {$result->valid($_)} qw/update_id title memo priority status deadline/);
     $c->redirect($c->req->uri_for("/"));
 };

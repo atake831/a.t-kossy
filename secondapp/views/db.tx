@@ -16,25 +16,35 @@
       	</form>
 	</td>
 	<td colspan="2"></td>
-      	<td align="right" colspan="4" class="{sorter: false}">
+      	<td align="right" colspan="5" class="{sorter: false}">
 	<form method="GET" id="search_form" name="search_form" action="<: $c.req.uri_for('/') :>">
 	<textarea name="search_str" rows="1"></textarea>
-	 <input type="submit" value="検索" />
+	 <input class="btn btn-info" type="submit" value="検索" />
 	</form>
 	</td>
         </tr>
 	<tr class="colhead">
-	<th>title</th>
-	<th>memo</th>
+	<th>タイトル</th>
+	<th>内容</th>
 	<th>優先度</th>
 	<th>状態</th>
 	<th>締め切り</th>
+	<th>残り日数</th>
 	<th>編集</th>
 	<th>削除</th>
 	</tr>
 	</thead>
 	<tbody>
+	: my $flag = 0;
 	: for $content -> $row{	
+	
+	: if($row.status == 0){
+	    </tbody>
+	    </table>
+	    <table class="done-list">
+	    <tbody>
+	: }
+
     	<tr align="center">
 	<td> <: $row.title :> </td>
 	<td> <: $row.memo :></td>
@@ -49,7 +59,7 @@
 	   低
 	 : }
 	</td>
-	<td align="center">
+	<td>
 	 : if ($row.status == 1){
 	   作業中
 	 : }
@@ -58,6 +68,15 @@
 	 : }
 	</td>
 	<td align="center"> <: $row.deadline :></td>
+	<td align="center"> 
+	    : if ($row.rest_date < 0){
+	      <font color="red">
+	      	    期限が過ぎています！<: $row.rest_date :> 日
+	      </font>
+            : }else{
+	      残り<: $row.rest_date :>日
+	    :}
+	</td>
 	<td>
 	<form method="GET" id="update_form" name="update_form" action="<: $c.req.uri_for('/edit') :>">
 	      <input type="submit" value="編集" />
@@ -68,54 +87,22 @@
 	      <input type="hidden" name="delete_id" value="<: $row.id :>" />
       	</form></td>
 	</tr>
+
    	: }
+
   </tbody>
   </table>
-<!--
-  <ht2>投稿</ht2>
-  <form method="POST" id="write_form" name="write_form" action="<: $c.req.uri_for('/write') :>">
-  title:
-  <textarea name="title" rows="1"></textarea>
-  <br />
-  memo:
-  <textarea name="memo" rows="5"></textarea>
-  <br />
-  priority:
-  <select name="priority">
-  <option value=3>高</option>
-  <option value=2>中</option>
-  <option value=1>低</option>
-  </select>
-  <br />
-  status:
-  <select name="status">
-  <option value=1>作業中</option>
-  <option value=0>done</option>
-  </select>
-  <br />
-  deadline:
-    <div id="datetimepicker1" class="input-append date">
-    <input name="deadline" data-format="yyyy-MM-dd hh:mm:ss" type="text"></input>
-    <span class="add-on">
-      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-      </i>
-    </span>
-    </div>
-  <script type="text/javascript">
-  	$(function() {
-    	  $('#datetimepicker1').datetimepicker({
-      	    language: 'en'
-    	  });
-  	});
-  </script>
-  <br />
-  <input type="submit" value="実行" />
-  </form>
--->
+
+
   <script>
   $(document).ready(function() {
       $("#todo-list").tablecloth({
         theme: "paper",  //　表の見た目
+        striped: true, //背景を交互に付けて見やすくする
+        sortable: true //ソート機能を使う
+      });
+      $(".done-list").tablecloth({
+        theme: "dark",  //　表の見た目
         striped: true, //背景を交互に付けて見やすくする
         sortable: true //ソート機能を使う
       });
