@@ -36,13 +36,13 @@
       </i>
     </span>
     </div>
-<script type="text/javascript">
-  $(function() {
-    $('#datetimepicker1').datetimepicker({
-      language: 'en'
-    });
-  });
-</script>
+    <script type="text/javascript">
+     $(function() {
+     	 $('#datetimepicker1').datetimepicker({
+	      language: 'en'
+    	 });
+     });
+    </script>
     <!--<textarea name="deadline" rows="1"><: $row.deadline :></textarea>-->
     <br />
     <input type="submit" value="実行" />

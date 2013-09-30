@@ -28,8 +28,8 @@ $(function () {
             // 横軸の設定
             xAxis: {
                 categories: [
-		      : for $week -> $w{
-		      	'<:$w :>' , 
+		        : for $week -> $w{
+		      	  '<:$w :>' , 
 	        	: }   
 			]
             },
@@ -90,9 +90,9 @@ $(function () {
 	    	type: 'areaspline',
                 name: 'busy point',
                 data: [
-		      : for $busy_point -> $point{
-		      	<:$point :> , 
-	              : }   
+  		        : for $busy_point -> $point{
+		      	  <:$point :> , 
+	                : }   
 		      ]
 		            }
             ]
