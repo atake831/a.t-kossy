@@ -92,7 +92,7 @@ $(function () {
                 data: [
 		      : for $busy_point -> $point{
 		      	<:$point :> , 
-	        	: }   
+	              : }   
 		      ]
 		            }
             ]
